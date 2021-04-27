@@ -1,0 +1,65 @@
+{
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi/DoEq1+tkaNNkgZFSVdlRGpXU37n3GuF+PnXkQ8m9jLteO7ENuGzT2DQiiWAsDiitUs2qvM52NP/CgWBWez3DErmOcuzBv2dWfI93QTIGNCkRUk3UUbDoh8oGxKpsBHmM51YxFBFXSHBytJ0lDpepOgFJfPrcTMtktRq5/bgYzwV1z5ZoMfOruOKw6eXA5GyeJ6Hfv2FpX1y9VCRN1zSeUIfjAYPF9qfc94uHG7wP+9crXMhyE9JtNfqKCgheMRHToEtMKddcZ8uTfkJ8myUmtUK8mx2DESeSr+Y5Gl40NaQWq0cNPxVsy4W7MXq2JyJ/9TMprOq5lLJX/QyEMRAwIDAQAB",
+    "manifest_version": 2,
+    "name": "BLS2 Tool",
+    "description": "Just another chrome extension",
+    "version": "3.5.4",
+    "icons": {"128": "images/icon_128.png"},
+    "browser_action": {
+        "default_icon": "images/icon.png",
+        "default_popup": "popup.html"
+    },
+
+    "options_page": "options.html",
+    
+    "permissions": [
+      "activeTab",
+      "storage",
+      "https://script.google.com",
+      "https://*.google.com/"
+    ],
+    
+    "content_scripts": [
+        {
+          "matches": [
+            "https://dashboards.corp.google.com/_e50d8e25_5405_4449_92d4_6410db19f710/*"
+            ],
+          "css": [
+            "css/vendor/material_icons.css",
+            "css/vendor/materialize.min.css",
+            "css/vendor/sweetalert2.min.css",
+            "css/main.css"
+          ],
+          "js": [
+            "./js/vendor/jquery-3.3.1.min.js",
+            "./js/vendor/materialize.min.js",
+            "./js/vendor/sweetalert2.min.js",
+            "./js/content_script.js"
+          ]
+        }
+      ],
+      
+    "web_accessible_resources": [
+      "https://fonts.gstatic.com/s/materialicons/v42/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2",
+      "js/vendor/*",
+      "css/*"
+    ],
+    "background": {
+      "scripts": [
+        "./js/background.js",
+        "./js/vendor/jquery-3.3.1.min.js",
+        "./js/popup.js"
+      ],
+      "persistent": false
+    },
+    
+   "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+F",
+        "mac": "MacCtrl+Shift+F"
+      },
+      "description": "Opens popup.html"
+      }
+    }
+}
