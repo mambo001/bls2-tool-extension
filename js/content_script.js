@@ -93,17 +93,16 @@ function recurringScrape(){
 
     // Set Default Page State
     let LS = localStorage
-    const timeToReloadArray = [5,6,35,36]
-    const timeToscrapeArray = [7,8,9,10,37,38,39,40]
-    const timeToResetFlagArray = [
-        1,2,3,4,
-        11,12,13,14,15,16,17,18,19,
-        20,21,22,23,24,25,26,27,28,29,
-        30,31,32,33,34,
-        41,42,43,44,45,46,47,48,49,
-        50,51,52,53,54,55,56,57,58,59
-    ]
-    
+
+    // const defaultTimeToResetFlagArray = [4,14,24,34,44,54]
+    // const defaultTimeScrapingInterval = [5,6,15,16,25,26,35,36,45,46,55,56]
+    // const timeToReloadArray = [5,6,35,36]
+    // const timeToscrapeArray = [7,8,9,10,37,38,39,40]
+    const timeToReloadArray = [5,7,15,17,25,27,35,37,45,47,55,57]
+    const timeToscrapeArray = [6,8,16,18,26,28,36,38,46,48,56,58]
+    const timeToResetFlagArray = [4,14,24,34,44,54]
+
+
     LS.pageState == undefined ? LS.setItem("pageState", "NULL") : ''
     LS.isSubmitted == undefined ? LS.setItem("isSubmitted", false) : ''
     
@@ -145,7 +144,8 @@ function recurringScrape(){
       if (isTimeToScrape){
           console.log("[IN]isTimeToScrape:",isTimeToScrape)
         //   location.reload()
-          if (LS.pageState == "READY" && LS.isSubmitted == "false"){
+        // if (LS.pageState == "READY" && LS.isSubmitted == "false") {
+        if (LS.pageState == "READY") {
               initScrape()
           } else console.log('LS:',LS.isSubmitted)
            
