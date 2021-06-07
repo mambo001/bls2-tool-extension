@@ -101,6 +101,7 @@ function recurringScrape(){
     const timeToReloadArray = [5,7,15,17,25,27,35,37,45,47,55,57]
     const timeToscrapeArray = [6,8,16,18,26,28,36,38,46,48,56,58]
     const timeToResetFlagArray = [4,14,24,34,44,54]
+    
 
 
     LS.pageState == undefined ? LS.setItem("pageState", "NULL") : ''
@@ -217,6 +218,7 @@ function showFAB(){
     `;
     document.body.appendChild(fab);
     document.querySelector('#trackBtn').addEventListener('click', initScraping)
+    addQMModal()
     // document.querySelector("#trackBtn").addEventListener('click', initScrape);
     // document.querySelector("#trackBtn").addEventListener('click', () => location.reload());
     console.log('FAB attached!');
@@ -230,7 +232,7 @@ function initScrape(){
     
     let timerInterval
     Swal.fire({
-      title: `Scrapin...`,
+      title: `Scraping...`,
       html: 'Closing in <b></b> milliseconds.',
       timer: 15000,
       timerProgressBar: true,
@@ -314,10 +316,156 @@ href="https://script.google.com/a/macros/google.com/s/AKfycbxivFmpPEs3So4NaC3Lk2
                 });
             }
         }
-
-
     );
+}
+
+function addQMModal(){
+    let modal = window.document.createElement('div');
+      modal.classList.add('m-modal');
+      modal.setAttribute("ID", "QMModal");
+    //   <h3 class="center-align card-title">QM Scraper</h3>
+    // <h4>Scrape Stats</h4>
+    // <ul class="collection" id="QMScrapeStat">
+    //     <li class="collection-item">Scraped Cases: <span class="right" style="font-weight: bold" id="scrapedCasesSpan">0</span></li>
+    //     <li class="collection-item">Swiss Cases: <span class="right" style="font-weight: bold" id="swissCases">0</span></li>
+    //     <li class="collection-item">Rejection Email Cases: <span class="right" style="font-weight: bold" id="rejectionEmailCases">0</span></li>
+    //     <li class="collection-item">Missing Study ID: <span class="right" style="font-weight: bold" id="missingStudyID">0</span></li>
+    // </ul>
+    modal.innerHTML = `
+    <div class="m-modal-content">
+    <small id="QMVersionText" style="margin: 0px 5px">Beta Version 1.2</small>
+    <small id="QMScrapeIntervalArrayText" style="margin: 0px 5px">Next scraping <span>[]</span></small>
+        <div class="row" style="">
+        <div class="col s12 m4">
+            <div class="card">
+            <div class="progress hide scrape-loader">
+                <div class="indeterminate"></div>
+            </div>
+            <div class="card-content" style="padding: 6px 12px">
+                
+
+                <div class="row">
+                
+                <div class="col s12">
+
+
+                    <table class="striped highlight responsive-table centered">
+                    <thead>
+                    <tr>
+                        <th>LDAP</th>
+                        <th>MTD</th>
+                        <th>Status</th>
+                        <th>Active Cases</td>
+                    </tr>
+                    </thead>
+
+                    <tbody id="QMScrapeStat"></tbody>
+                </table>
+                </div>
+                
+                
+                <div class="col s12 hide" id="QMElevatedInput">
+                    <h4 style="margin-top: 12px;">Scrape Configurations</h4>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <label for="QMScrapeIntervalInput" class="active">Scrape Minute Interval</label>
+                            <input id="QMScrapeIntervalInput" type="number" class="validate" min="0" max="60" placeholder="10" 
+                                value=${
+                                    localStorage.QMScrapeInterval != undefined && localStorage.QMScrapeInterval > 0 
+                                    ? localStorage.QMScrapeInterval 
+                                    : ''
+                                } 
+                                required>
+                        </div>
+                        <div class="input-field col s12 hide">
+                            <label for="QMLDAPToScrape" class="active">LDAP</label>
+                            <input id="QMLDAPToScrape" type="text" class="validate" placeholder="10" value="me" required>
+                        </div>
+                    
+                        <div class="input-field col s12 m12 l6 hide">
+                            <label for="scrapeStartDate" class="active">Start Date</label>
+                            <input type="text" id="QMScrapeStartDate" class="datepicker">
+                        </div>
+                        
+                        <div class="input-field col s12 m12 l6 hide">
+                            <label for="QMScrapeEndDate" class="active">End Date</label>
+                            <input type="text" id="QMScrapeEndDate" class="datepicker">
+                        </div>
+                        
+                        <div class="col s12 hide">
+                            <p>
+                            <input type="checkbox" id="QMSwissCheckbox" checked/>
+                            <label for="QMVersionText">Include Swiss</label>
+                            </p>
+                        </div>
+                        
+                        <div class="col s12 hide">
+                            <p>
+                            <input type="checkbox" id="QMRejectionCheckbox" checked/>
+                            <label for="QMRejectionCheckbox">Include Rejection Email</label>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="card-action" style="padding: 6px 12px">
+                <a style="padding: 0 5px; margin: 5px; display: flex; justify-content: center; align-items: center; color: #fff;"
+                    class="waves-effect waves-light btn-large blue scrape-action-btn" id="QMscrapeBtn">
+                <i class="material-icons left" style="color: #fff;padding: 0 5px;">get_app</i>Scrape Cases
+                </a>
+                
+                <a style="padding: 0 5px; margin: 5px; display: flex; justify-content: center; align-items: center; color: #fff;"
+                    class="waves-effect waves-light btn-large blue darken-4 scrape-action-btn" id="QMAssignCasesBtn">
+                <i class="material-icons left" style="color: #fff;padding: 0 5px;">get_app</i>Assign Cases
+                </a>
+                
+                <a style="padding: 0 5px; margin: 5px; display: flex; justify-content: center; align-items: center; color: #fff;"
+                    class="waves-effect waves-light btn-large green scrape-action-btn" id="QMsubmitBtn">
+                <i class="material-icons left" style="color: #fff;padding: 0 5px;">send</i>Submit
+                </a>
+            </div>
+            </div>
+        </div>
+        <div class="col s12 m8">
+            <div class="card">
+            <div class="progress hide scrape-loader">
+                <div class="indeterminate"></div>
+            </div>
+            <table class="striped highlight responsive-table centered">
+                <thead>
+                <tr>
+                    <th>Created Date</th>
+                    <th>AR Assign Time</th>
+                    <th>LDAP</th>
+                    <th>Study ID</th>
+                    <th>Case ID</th>
+                    <th>Remarks</th>
+                    <th>Status</th>
+                    <th>Assignee</th>
+                </tr>
+                </thead>
+
+                <tbody id="QMScrapedTbody"></tbody>
+            </table>
+
+            </div>
+        </div>
+        
+        </div>
     
+        </div>
+    </div>
+    `;
+    document.body.appendChild(modal);
+
+    window.document.onkeydown = (e) => {
+        if(e.altKey && e.which == 87) {
+            // open QM scraper
+            $('#QMModal').modal('open');
+        }
+    }
 }
 
 
