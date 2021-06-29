@@ -3,7 +3,7 @@
     "manifest_version": 2,
     "name": "BLS2 Tool",
     "description": "Just another chrome extension",
-    "version": "3.7",
+    "version": "3.8.1",
     "icons": {"128": "images/icon_128.png"},
     "browser_action": {
         "default_icon": "images/icon.png",
@@ -15,8 +15,7 @@
     "permissions": [
       "activeTab",
       "storage",
-      "https://script.google.com",
-      "https://*.google.com/"
+      "https://script.google.com/a/macros/google.com/s/AKfycbxivFmpPEs3So4NaC3Lk2BN5iE3ahxF4H4eTt8W-v64/"
     ],
     
     "content_scripts": [
