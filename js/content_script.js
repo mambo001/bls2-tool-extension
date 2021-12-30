@@ -98,7 +98,7 @@ function recurringScrape(){
     // const defaultTimeScrapingInterval = [5,6,15,16,25,26,35,36,45,46,55,56]
     // const timeToReloadArray = [5,6,35,36]
     // const timeToscrapeArray = [7,8,9,10,37,38,39,40]
-    const timeToReloadArray = [5,7,15,17,25,27,35,37,45,47,55,57]
+    const timeToReloadArray = [3,13,23,33,43,53]
     const timeToscrapeArray = [6,8,16,18,26,28,36,38,46,48,56,58]
     const timeToResetFlagArray = [4,14,24,34,44,54]
     
@@ -149,11 +149,6 @@ function recurringScrape(){
         if (LS.pageState == "READY") {
               initScrape()
           } else console.log('LS:',LS.isSubmitted)
-           
-        //   if (LS.isSubmitted == false && LS.pageState == "READY"){
-        //       console.log('ye boi');
-        //       initScrape()
-        //   }
       } else console.log("[OUT]isTimeToScrape:",isTimeToScrape)
        
     }, 35000)
@@ -264,25 +259,45 @@ function doScrape(){
     const casesTRArray = Array.from(casesTR);
     const refreshBtn = document.querySelector('.dashboards-refresh');
     let caseData = [];
+    let surveyData = [];
     
     if (casesTR.length !== 0){
         // Extract text from all initialized
         casesTR.forEach((tr) => {
             const tdArray = Array.from(tr.querySelectorAll('.aplos-table-cell'));
             const tdText = tdArray.map((td) => td.textContent);
+            const [
+                surveyName,
+                surveyLanguage,
+                surveyContent,
+                surveyURL,
+                lastUpdatedTime,
+                product
+            ] = tdText;
 
             caseData.push({
-                name: tdText[0],
-                surveyLanguage: tdText[1],
-                surveyURL: tdText[3],
-                lastUpdatedTime: tdText[4]
+                name: surveyName,
+                surveyLanguage: surveyLanguage,
+                surveyURL: surveyURL,
+                lastUpdatedTime: lastUpdatedTime
             });
             
+            surveyData.push({
+                surveyName,
+                surveyLanguage,
+                surveyContent,
+                surveyURL,
+                lastUpdatedTime,
+                product
+            });
+
             console.log(tdText);
         });
         
-        console.log(caseData);
-        return doSubmitToSheet(caseData);
+        console.log({caseData});
+        console.log({surveyData});
+        doSubmitToSheet(caseData);
+        doSubmitToOtherSheet(surveyData)
     } else {
         // Refresh table if there are no table data
         refreshBtn.click();
@@ -318,6 +333,31 @@ href="https://script.google.com/a/macros/google.com/s/AKfycbxivFmpPEs3So4NaC3Lk2
         }
     );
 }
+
+function doSubmitToOtherSheet(data){
+    // Fetch Migration to background script
+    chrome.runtime.sendMessage(
+        {
+            contentScriptQuery: 'submitSurveyQuery',
+            postData: data
+        },
+        data => {
+            if (data.response != "error"){
+                console.log(data);
+            } else {
+                console.log('Error:', data.response);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Submission failed!',
+                    text: 'There seems to be a problem in submitting.',
+                    footer: `<a target="_blank"
+href="https://script.google.com/a/macros/google.com/s/AKfycbxivFmpPEs3So4NaC3Lk2BN5iE3ahxF4H4eTt8W-v64/dev?action=read">Authorize the script</a>`
+                });
+            }
+        }
+    );
+}
+
 
 function addQMModal(){
     let modal = window.document.createElement('div');
